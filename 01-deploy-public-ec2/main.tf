@@ -11,10 +11,15 @@ module "vpc" {
   }
 }
 
+variable "azs" {
+  type = list(string)
+}
+
 module "public-subnets" {
   source              = "../modules/public-subnets"
   vpc_id              = module.vpc.vpc_id
   public_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  azs                 = var.azs
   tags = {
     terraform   = "true"
     environment = "dev"
@@ -26,6 +31,7 @@ module "private-subnets" {
   source               = "../modules/private-subnets"
   vpc_id               = module.vpc.vpc_id
   private_subnet_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  azs                  = var.azs
   tags = {
     terraform   = "true"
     environment = "dev"
@@ -60,11 +66,26 @@ module "web-security-group" {
   vpc_id = module.vpc.vpc_id
 }
 
+variable "key_name" {
+  type = string
+}
+
+variable "ami_id" {
+  type = string
+}
+
+variable "user_data" {
+  type = string
+}
+
+
 # ami-02453f5468b897e31
 module "ec2" {
   source            = "../modules/ec2"
-  ami_id            = "ami-02453f5468b897e31"
+  ami_id            = var.ami_id
   instance_type     = "t2.micro"
   subnet_id         = module.public-subnets.subnet_id
   security_group_id = module.web-security-group.security_group_id
+  key_name          = var.key_name
+  user_data         = var.user_data
 }
