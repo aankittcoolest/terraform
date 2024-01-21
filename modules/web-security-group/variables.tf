@@ -4,14 +4,8 @@ variable "vpc_id" {
     default = ""
 }
 
-variable "cidr_blocks" {
-    description = "Cidr blocks"
-    type = list(string)
-    default = []
-}
-
 variable "name" {
     description = "Name of security group"
     type = string
-    default = ""
+    default = "Terraform security group"
 }
