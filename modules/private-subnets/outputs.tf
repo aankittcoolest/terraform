@@ -1,16 +1,15 @@
-
-data "aws_subnets" "public_subnets" {
+data "aws_subnets" "private_subnets" {
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
   }
   tags = {
-    tier = "public"
+    tier = "private"
   }
 }
 
 data "aws_subnet" "subnet" {
-  for_each = toset(data.aws_subnets.public_subnets.ids)
+  for_each = toset(data.aws_subnets.private_subnets.ids)
   id       = each.value
 }
 
@@ -19,5 +18,5 @@ output "subnet_ids" {
 }
 
 output "subnet_id" {
-  value = length(data.aws_subnets.public_subnets.ids) > 0 ? data.aws_subnets.public_subnets.ids[0] : ""
+  value = length(data.aws_subnets.private_subnets.ids) > 0 ? data.aws_subnets.private_subnets.ids[0] : ""
 }

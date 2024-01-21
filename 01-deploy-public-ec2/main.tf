@@ -2,15 +2,6 @@ provider "aws" {
   region = "ap-southeast-1"
 }
 
-# module "ec2" {
-#   source = "../modules/ec2"
-#   tags = {
-#     terraform = "true"
-#     environment = "dev"
-#   }
-# }
-
-
 module "vpc" {
   source     = "../modules/vpc"
   cidr_block = "10.0.0.0/16"
